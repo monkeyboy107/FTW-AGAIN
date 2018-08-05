@@ -21,12 +21,17 @@ class ImportChars():
         self.attack = None
         self.damage = None
         self.char = None
+        self.chars_list = []
         self.chars = []
         self.packed_chars = None
         self.count = 0
         try:
             self.import_chars()
         except TypeError:
+            None
+        except yaml.parser.ParserError:
+            None
+        except AttributeError:
             None
 
     def import_chars(self):
@@ -37,33 +42,28 @@ class ImportChars():
         except FileNotFoundError:
             self.export_chars()
         print(self.packed_chars)
-        self.char_loader(self.packed_chars)
-
 
     def export_chars(self):
-        print('Exporting chars')
+        print('Exporting chars', self.chars)
         with open('chars.yml', 'w+') as chars:
-            for i in self.chars:
-                print(yaml.dump(i, chars))
+            print(yaml.dump(self.chars, chars))
 
-    def make_dict(self, name=None, health=None, defence=None, attack=None, damage=None, count=None):
+    def make_dict(self, name=None, health=None, defence=None, attack=None, damage=None):
         print('Making dictionary')
         self.name = name
         self.health = health
         self.defence = defence
         self.attack = attack
         self.damage = damage
-        num = count
-        self.char = {num:
-            [
-                {'name': name},
-                {'health': health},
-                {'defence': defence},
-                {'attack': attack},
-                {'damage': damage}
-            ]
-        }
-        self.chars.append(self.char)
+        self.chars_list.append({
+            'name': name,
+            'health': health,
+            'defence': defence,
+            'attack': attack,
+            'damage': damage
+        },
+        )
+        # self.chars.append(self.char)
         print(self.char)
 
     def save_char(self, char):
@@ -73,38 +73,10 @@ class ImportChars():
     def save_chars(self, chars):
         for i in chars:
             print(self.count)
-            self.make_dict(count=self.count, name=i.name, health=i.health, defence=i.defence, attack=i.attack,
+            self.make_dict(name=i.name, health=i.health, defence=i.defence, attack=i.attack,
                            damage=i.damage)
-            self.export_chars()
-            self.count += 1
-
-    def char_loader(self, chars):
-        name = None
-        health = None
-        defence = None
-        attack = None
-        damage = None
-        deploy = []
-        print('Loading chars')
-        for i in range(len(chars)):
-            print('')
-            for j in chars[i]:
-                print(j)
-                if j.get('name') is not None:
-                    name = j.get('name')
-                if not j.get('health') is not None:
-                     health = j.get('health')
-                if not j.get('defence') is not None:
-                    defence = j.get('defence')
-                if not j.get('attack') is not None:
-                     attack = j.get('attack')
-                if not j.get('damage') is not None:
-                    damage = j.get('damage')
-            deploy.append(BaseChar(name=name, health=health, defence=defence, attack=attack, damage=damage))
-            print(BaseChar(name=name, health=health, defence=defence, attack=attack, damage=damage))
-        #self.chars = deploy
-        for i in deploy:
-            print(i)
+            self.chars = {'Characters': self.chars_list}
+        self.export_chars()
 
 
 def main():
