@@ -4,8 +4,6 @@
 # Date: 08/03/2018
 ##########################
 # imports
-from CharCreator import *
-from AttackEngine import *
 import yaml
 ##########################
 # Main Code
