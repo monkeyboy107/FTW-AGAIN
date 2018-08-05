@@ -1,12 +1,3 @@
-0:
-- {name: Bob}
-- {health: 100}
-- {defence: 100}
-- {attack: 100}
-- {damage: 100}
-1:
-- {name: Frank}
-- {health: 100}
-- {defence: 100}
-- {attack: 100}
-- {damage: 100}
+Characters:
+- {attack: 100, damage: 100, defence: 100, health: 100, name: Bob}
+- {attack: 100, damage: 100, defence: 100, health: 100, name: Frank}

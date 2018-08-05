@@ -13,7 +13,7 @@ from AttackEngine import *
 # Main Code
 
 
-class ImportChars():
+class ImportChars:
     def __init__(self):
         self.name = None
         self.health = None
@@ -42,6 +42,8 @@ class ImportChars():
         except FileNotFoundError:
             self.export_chars()
         print(self.packed_chars)
+        self.char_loader()
+
 
     def export_chars(self):
         print('Exporting chars', self.chars)
@@ -50,11 +52,6 @@ class ImportChars():
 
     def make_dict(self, name=None, health=None, defence=None, attack=None, damage=None):
         print('Making dictionary')
-        self.name = name
-        self.health = health
-        self.defence = defence
-        self.attack = attack
-        self.damage = damage
         self.chars_list.append({
             'name': name,
             'health': health,
@@ -63,7 +60,6 @@ class ImportChars():
             'damage': damage
         },
         )
-        # self.chars.append(self.char)
         print(self.char)
 
     def save_char(self, char):
@@ -78,13 +74,32 @@ class ImportChars():
             self.chars = {'Characters': self.chars_list}
         self.export_chars()
 
+    def append_chars(self, chars):
+        if isinstance(chars, list):
+            for i in chars:
+                self.chars.append(i)
+        elif isinstance(chars, str):
+            self.append_chars([chars])
+        else:
+            raise TypeError
+        self.save_chars(self.chars)
+
+    def char_loader(self):
+        print('Loading chars')
+        unpacked_chars = []
+        for i in self.packed_chars:
+            values = self.packed_chars.get(i)
+        for i in values:
+            unpacked_chars.append(BaseChar(attack=i.get('attack'), name=i.get('name'), health=i.get('health'), defence=i.get('defence'), damage=i.get('damage')))
+        print(unpacked_chars)
+
 
 def main():
     print('Main')
     imports = ImportChars()
     bob = BaseChar(name='Bob')
     frank = BaseChar(name='Frank')
-    imports.save_chars([bob, frank])
+    imports.append_chars([bob, frank])
     imports.import_chars()
 
 
