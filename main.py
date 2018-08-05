@@ -22,16 +22,23 @@ class ImportChars():
         self.damage = None
         self.char = None
         self.chars = []
+        self.packed_chars = None
         self.count = 0
-        self.import_chars()
+        try:
+            self.import_chars()
+        except TypeError:
+            None
 
     def import_chars(self):
         print('Importing chars')
         try:
-            with open('chars.yml', 'r+') as chars:
-                print(yaml.load(chars))
-        except:
+            with open('chars.yml', 'r') as data:
+                self.packed_chars = yaml.load(data)
+        except FileNotFoundError:
             self.export_chars()
+        print(self.packed_chars)
+        self.char_loader(self.packed_chars)
+
 
     def export_chars(self):
         print('Exporting chars')
@@ -65,11 +72,38 @@ class ImportChars():
 
     def save_chars(self, chars):
         for i in chars:
-            self.count = self.count + 1
             print(self.count)
             self.make_dict(count=self.count, name=i.name, health=i.health, defence=i.defence, attack=i.attack,
                            damage=i.damage)
             self.export_chars()
+            self.count += 1
+
+    def char_loader(self, chars):
+        name = None
+        health = None
+        defence = None
+        attack = None
+        damage = None
+        deploy = []
+        print('Loading chars')
+        for i in range(len(chars)):
+            print('')
+            for j in chars[i]:
+                print(j)
+                if j.get('name') is not None:
+                    name = j.get('name')
+                if not j.get('health') is not None:
+                     health = j.get('health')
+                if not j.get('defence') is not None:
+                    defence = j.get('defence')
+                if not j.get('attack') is not None:
+                     attack = j.get('attack')
+                if not j.get('damage') is not None:
+                    damage = j.get('damage')
+            deploy.append(BaseChar(name=name, health=health, defence=defence, attack=attack, damage=damage))
+        #self.chars = deploy
+        for i in deploy:
+            print(i)
 
 
 def main():
@@ -78,6 +112,7 @@ def main():
     bob = BaseChar(name='Bob')
     frank = BaseChar(name='Frank')
     imports.save_chars([bob, frank])
+    imports.import_chars()
 
 
 if __name__ == '__main__':
