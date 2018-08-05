@@ -1,10 +1,10 @@
-1:
+0:
 - {name: Bob}
 - {health: 100}
 - {defence: 100}
 - {attack: 100}
 - {damage: 100}
-2:
+1:
 - {name: Frank}
 - {health: 100}
 - {defence: 100}

@@ -101,6 +101,7 @@ class ImportChars():
                 if not j.get('damage') is not None:
                     damage = j.get('damage')
             deploy.append(BaseChar(name=name, health=health, defence=defence, attack=attack, damage=damage))
+            print(BaseChar(name=name, health=health, defence=defence, attack=attack, damage=damage))
         #self.chars = deploy
         for i in deploy:
             print(i)
