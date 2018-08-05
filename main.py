@@ -7,7 +7,6 @@
 from CharCreator import *
 from AttackEngine import *
 import yaml
-
 ##########################
 # Main Code
 
