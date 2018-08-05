@@ -39,7 +39,7 @@ class ImportChars():
         self.defence = defence
         self.attack = attack
         self.damage = damage
-        self.char = dict(dict(('name', name), ('health', health), ('defence', defence), ('attack', attack), ('damage', damage)))
+        self.char = ({'name': name}, {'health': health}, {'defence': defence}, {'attack': attack}, {'damage': damage})
         print(self.char)
 
 
