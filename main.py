@@ -7,6 +7,7 @@
 import yaml
 from CharCreator import *
 from AttackEngine import *
+from os import remove
 
 
 ##########################
@@ -15,6 +16,7 @@ from AttackEngine import *
 
 class ImportChars:
     def __init__(self):
+        print('Init ImportChars')
         self.name = None
         self.health = None
         self.defence = None
@@ -24,6 +26,7 @@ class ImportChars:
         self.chars_list = []
         self.chars = []
         self.packed_chars = None
+        self.loaded_chars = []
         self.count = 0
         try:
             self.import_chars()
@@ -36,19 +39,21 @@ class ImportChars:
 
     def import_chars(self):
         print('Importing chars')
+        file = 'chars.yml'
         try:
-            with open('chars.yml', 'r') as data:
+            with open(file, 'r') as data:
                 self.packed_chars = yaml.load(data)
+                self.char_loader()
         except FileNotFoundError:
             self.export_chars()
+        remove(file)
         print(self.packed_chars)
-        self.char_loader()
 
 
     def export_chars(self):
-        print('Exporting chars', self.chars)
+        print('Exporting chars')
         with open('chars.yml', 'w+') as chars:
-            print(yaml.dump(self.chars, chars))
+            yaml.dump(self.chars, chars)
 
     def make_dict(self, name=None, health=None, defence=None, attack=None, damage=None):
         print('Making dictionary')
@@ -62,27 +67,31 @@ class ImportChars:
         )
         print(self.char)
 
-    def save_char(self, char):
-        char = [char]
-        self.save_char(char)
 
     def save_chars(self, chars):
-        for i in chars:
-            print(self.count)
-            self.make_dict(name=i.name, health=i.health, defence=i.defence, attack=i.attack,
-                           damage=i.damage)
-            self.chars = {'Characters': self.chars_list}
-        self.export_chars()
+        print('Saving Chars')
+        if isinstance(chars, list):
+            print(len(chars))
+            for i in chars:
+                print(self.count)
+                self.make_dict(name=i.name, health=i.health, defence=i.defence, attack=i.attack,
+                               damage=i.damage)
+                self.chars = {'Characters': self.chars_list}
+            self.export_chars()
+        else:
+            print("Expecting object or list ",end='')
+            raise TypeError
 
     def append_chars(self, chars):
+        print('Appending chars')
         if isinstance(chars, list):
             for i in chars:
-                self.chars.append(i)
-        elif isinstance(chars, str):
+                self.loaded_chars.append(i)
+        elif isinstance(chars, object):
             self.append_chars([chars])
         else:
             raise TypeError
-        self.save_chars(self.chars)
+        self.save_chars(self.loaded_chars)
 
     def char_loader(self):
         print('Loading chars')
@@ -90,8 +99,9 @@ class ImportChars:
         for i in self.packed_chars:
             values = self.packed_chars.get(i)
         for i in values:
-            unpacked_chars.append(BaseChar(attack=i.get('attack'), name=i.get('name'), health=i.get('health'), defence=i.get('defence'), damage=i.get('damage')))
-        print(unpacked_chars)
+            unpacked_chars.append(BaseChar(attack=i.get('attack'), name=i.get('name'), health=i.get('health'),
+                                           defence=i.get('defence'), damage=i.get('damage')))
+        self.append_chars(unpacked_chars)
 
 
 def main():
@@ -99,8 +109,7 @@ def main():
     imports = ImportChars()
     bob = BaseChar(name='Bob')
     frank = BaseChar(name='Frank')
-    imports.append_chars([bob, frank])
-    imports.import_chars()
+    #imports.append_chars([bob, frank])
 
 
 if __name__ == '__main__':
