@@ -8,7 +8,7 @@ import yaml
 from CharCreator import *
 from AttackEngine import *
 from os import remove
-
+from atexit import register
 
 ##########################
 # Main Code
@@ -36,6 +36,7 @@ class ImportChars:
             None
         except AttributeError:
             None
+        register(self.save_chars, self.loaded_chars)
 
     def import_chars(self):
         print('Importing chars')
@@ -46,9 +47,7 @@ class ImportChars:
                 self.char_loader()
         except FileNotFoundError:
             self.export_chars()
-        remove(file)
         print(self.packed_chars)
-
 
     def export_chars(self):
         print('Exporting chars')
@@ -67,7 +66,6 @@ class ImportChars:
         )
         print(self.char)
 
-
     def save_chars(self, chars):
         print('Saving Chars')
         if isinstance(chars, list):
@@ -79,7 +77,7 @@ class ImportChars:
                 self.chars = {'Characters': self.chars_list}
             self.export_chars()
         else:
-            print("Expecting object or list ",end='')
+            print("Expecting object or list ", end='')
             raise TypeError
 
     def append_chars(self, chars):
@@ -91,7 +89,6 @@ class ImportChars:
             self.append_chars([chars])
         else:
             raise TypeError
-        self.save_chars(self.loaded_chars)
 
     def char_loader(self):
         print('Loading chars')
@@ -109,7 +106,7 @@ def main():
     imports = ImportChars()
     bob = BaseChar(name='Bob')
     frank = BaseChar(name='Frank')
-    #imports.append_chars([bob, frank])
+    imports.append_chars([bob, frank])
 
 
 if __name__ == '__main__':
